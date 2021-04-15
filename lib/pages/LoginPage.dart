@@ -4,21 +4,8 @@ import 'package:cocheskm/model/login_model.dart';
 import 'package:cocheskm/pages/register/RegistrationPage.dart';
 import 'package:cocheskm/utils/colors.dart';
 import 'package:cocheskm/widgets/Decoration.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-/*class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Login Page",
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: LoginHome(),
-    );
-  }
-}*/
 
 class LoginPage extends StatefulWidget {
   @override
@@ -85,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
@@ -142,6 +130,19 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: inputDecoration(),
                             )
                           ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0, right: 30.0),
+                        child: Text(
+                          '¿Olvidaste tu contraseña?',
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                              color: PrimaryColor,
+                              fontSize: 12.0,
+                              fontStyle: FontStyle.italic,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.normal),
                         ),
                       ),
                       Padding(
@@ -210,10 +211,12 @@ class _LoginPageState extends State<LoginPage> {
                               padding: EdgeInsets.only(top: 20.0),
                             ),
                             new GestureDetector(
-                                onTap:() {
+                                onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => RegistrationPage()),
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            RegistrationPage()),
                                   );
                                 },
                                 child: RichText(
