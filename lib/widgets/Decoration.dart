@@ -7,7 +7,7 @@ InputDecoration inputDecoration() {
     border: InputBorder.none,
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
-      borderSide: BorderSide(color: Colors.black),
+      borderSide: BorderSide(color: PrimaryColor),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(8.0)),

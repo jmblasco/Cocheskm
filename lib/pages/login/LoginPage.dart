@@ -2,6 +2,8 @@ import 'package:cocheskm/ProgressHUD.dart';
 import 'package:cocheskm/api/api_service.dart';
 import 'package:cocheskm/model/login_model.dart';
 import 'package:cocheskm/pages/register/RegistrationPage.dart';
+import 'package:cocheskm/utils/Constants.dart';
+import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
 import 'package:cocheskm/utils/colors.dart';
 import 'package:cocheskm/widgets/Decoration.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   LoginRequestModel loginRequestModel;
@@ -175,26 +178,20 @@ class _LoginPageState extends State<LoginPage> {
 
                                       if (value.token != null &&
                                           value.token.isNotEmpty) {
-                                        final snackBar = SnackBar(
-                                            content: Text("Login Successful"));
-                                        scaffoldKey.currentState
-                                            .showSnackBar(snackBar);
+                                        SharedPreferenceUtil.addStringToSF(USER_SESSION_KEY, value.token);
+                                        SharedPreferenceUtil.addIntToSF(USER_ID_KEY, value.id);
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.msg)));
+
                                       } else {
-                                        final snackBar = SnackBar(
-                                            content: Text(value.error));
-                                        scaffoldKey.currentState
-                                            .showSnackBar(snackBar);
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.error)));
+
                                       }
                                     }
                                   }).onError((error, stackTrace) {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
-
-                                    final snackBar = SnackBar(
-                                        content: Text(error.toString()));
-                                    scaffoldKey.currentState
-                                        .showSnackBar(snackBar);
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
                                   });
                                 }
                               },
@@ -223,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                                   textAlign: TextAlign.center,
                                   text: new TextSpan(
                                     text:
-                                        'Si solo quieres vender tu coche accede desde',
+                                        'Si eres un profesional accede desde',
                                     style: TextStyle(
                                         color: Color(0xFF1AB394),
                                         fontSize: 15.0,
@@ -251,6 +248,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 
   bool validateAndSave() {
     final form = globalFormKey.currentState;

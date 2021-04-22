@@ -1,4 +1,3 @@
-const String BASE_API_URL = "http://dev1.cocheskm.com.es:3099";
-const String LOGIN_END_POINT = "/api/v1/identificacion";
-const String REGISTRATION_END_POINT = "/api/v1/particulares";
-const Map<String, String> headerMap = {"Api-Key": "DEV-apikey"};
+const String USER_SESSION_KEY = "user_session";
+const String USER_ID_KEY = "user_id";
+const String USER_CANAL_AVISOS_KEY = "user_canal_avisos";
