@@ -1,4 +1,5 @@
-import 'package:cocheskm/pages/thirdPage.dart';
+import 'package:cocheskm/api/api_service.dart';
+import 'package:cocheskm/pages/vehicalRegistraion/thirdRegisterPage.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 
@@ -18,6 +19,7 @@ class MyFifthPage extends StatefulWidget {
 
 class _MyFifthPageState extends State<MyFifthPage> {
   var items = ['Selecciona'];
+
 
   @override
   Widget build(BuildContext context) {
@@ -352,10 +354,11 @@ class _MyFifthPageState extends State<MyFifthPage> {
                           dotsCount: 4,
                           position: 1,
                           decorator: DotsDecorator(
-                            size: const Size.square(15.0),
-                            activeSize: const Size(15.0, 15.0),
-                            spacing: const EdgeInsets.all(15.0),
-                            color: Color(0xFFEEEAEA), // Inactive color
+                            size: const Size.square(8.0),
+                            activeSize: const Size(8.0, 8.0),
+                            spacing: const EdgeInsets.all(8.0),
+                            color: Color(0xFFEEEAEA),
+                            // Inactive color
                             activeColor: Color(0xFF1AB394),
                           ),
                         )
@@ -370,4 +373,5 @@ class _MyFifthPageState extends State<MyFifthPage> {
       ),
     );
   }
+
 }

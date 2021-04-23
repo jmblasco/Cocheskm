@@ -1,5 +1,5 @@
 import 'file:///F:/StudioProjects/cocheskm/lib/pages/register/EmailValidationPage.dart';
-import 'package:cocheskm/pages/thirdPage.dart';
+import 'file:///F:/StudioProjects/cocheskm/lib/pages/vehicalRegistraion/thirdRegisterPage.dart';
 import 'package:cocheskm/utils/Constants.dart';
 import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
 import 'package:flutter/material.dart';

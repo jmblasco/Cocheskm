@@ -1,4 +1,5 @@
 import 'package:cocheskm/model/email_validation_model.dart';
+import 'package:cocheskm/model/province_response.dart';
 import 'package:cocheskm/model/registration_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,6 +12,7 @@ class APIService {
   static String REGISTRATION_END_POINT = "/particulares";
   static String NEW_CODIGO_END_POINT = "/new_codigo_verify_email";
   static String VERIFY_EMAIL_END_POINT = "/verify_email";
+  static String PROVINCE_END_POINT = "/datos/provincias";
   static Map<String, String> headerMap = {"Api-Key": "DEV-apikey"};
 
   static Future<LoginResponseModel> login(
@@ -54,5 +56,14 @@ class APIService {
         await http.get(Uri.encodeFull(url), headers: headerMap);
 
     return EmailValidationResponseModel.fromJson(json.decode(response.body));
+  }
+
+  static Future getAllProvince() async {
+    String url = BASE_API_URL +
+        PROVINCE_END_POINT;
+    final response =
+    await http.get(Uri.encodeFull(url), headers: headerMap);
+
+    return response.body;
   }
 }

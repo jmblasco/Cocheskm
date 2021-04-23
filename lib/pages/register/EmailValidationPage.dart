@@ -1,7 +1,9 @@
+import 'package:ars_progress_dialog/dialog.dart';
 import 'package:cocheskm/api/api_service.dart';
 import 'package:cocheskm/model/email_validation_model.dart';
-import 'package:cocheskm/pages/thirdPage.dart';
+import 'package:cocheskm/pages/vehicalRegistraion/thirdRegisterPage.dart';
 import 'package:cocheskm/utils/Constants.dart';
+import 'package:cocheskm/utils/ProgressDialogUtil.dart';
 import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
 import 'package:cocheskm/widgets/Decoration.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,11 +29,13 @@ class _MySecondPageState extends State<MySecondPage> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   EmailValidationRequestModel emailValidationRequestModel;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  ArsProgressDialog _arcProgressDialog;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _arcProgressDialog = ProgressDialogUtil.arcProgressDialog(context);
     emailValidationRequestModel = EmailValidationRequestModel();
   }
 
@@ -56,12 +60,21 @@ class _MySecondPageState extends State<MySecondPage> {
             Container(
               child: Column(
                 children: [
-                  Text(
-                    "Verificación de E-mail",
-                    style: TextStyle(
-                      color: Color(0xFF1AB394),
-                      fontWeight: FontWeight.w900,
-                      fontSize: 22.0,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ThirdPage()),
+                      );
+                    },
+                    child: Text(
+                      "Verificación de E-mail",
+                      style: TextStyle(
+                        color: Color(0xFF1AB394),
+                        fontWeight: FontWeight.w900,
+                        fontSize: 22.0,
+                      ),
                     ),
                   ),
                   Padding(
@@ -99,7 +112,8 @@ class _MySecondPageState extends State<MySecondPage> {
                                 child: TextFormField(
                                   keyboardType: TextInputType.text,
                                   onSaved: (input) => input,
-                                  validator: (input) => input.isEmpty
+                                  validator: (input) =>
+                                  input.isEmpty
                                       ? "Please enter validation code"
                                       : null,
                                   // style: TextStyle(height: 0.8),
@@ -121,23 +135,30 @@ class _MySecondPageState extends State<MySecondPage> {
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               onPressed: () async {
-                                if(validateAndSave()) {
-                                  int id = await SharedPreferenceUtil.getIntValuesSF(USER_ID_KEY) ?? -1;
+                                if (validateAndSave()) {
+                                  _arcProgressDialog.show();
+                                  int id = await SharedPreferenceUtil
+                                      .getIntValuesSF(USER_ID_KEY) ?? -1;
                                   emailValidationRequestModel.id = id;
-                                  APIService.verifyEmail(emailValidationRequestModel)
+                                  APIService.verifyEmail(
+                                      emailValidationRequestModel)
                                       .then((value) {
                                     if (value != null) {
                                       setState(() {
                                         isApiCallProcess = false;
                                       });
 
-                                      if (value.msg != null  &&  value.msg.isNotEmpty) {
+                                      if (value.msg != null &&
+                                          value.msg.isNotEmpty) {
+                                        _arcProgressDialog.dismiss();
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ThirdPage()),
+                                              builder: (context) =>
+                                                  ThirdPage()),
                                         );
                                       } else {
+                                        _arcProgressDialog.dismiss();
                                         final snackBar = SnackBar(
                                             content: Text(value.error));
                                         scaffoldKey.currentState
@@ -145,6 +166,7 @@ class _MySecondPageState extends State<MySecondPage> {
                                       }
                                     }
                                   }).onError((error, stackTrace) {
+                                    _arcProgressDialog.dismiss();
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
@@ -153,9 +175,6 @@ class _MySecondPageState extends State<MySecondPage> {
                                     scaffoldKey.currentState
                                         .showSnackBar(snackBar);
                                   });
-
-
-
                                 }
                               },
                               child: Text(
@@ -193,22 +212,27 @@ class _MySecondPageState extends State<MySecondPage> {
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               onPressed: () async {
-                                int id = await SharedPreferenceUtil.getIntValuesSF(USER_ID_KEY) ?? -1;
+                                _arcProgressDialog.show();
+                                int id = await SharedPreferenceUtil
+                                    .getIntValuesSF(USER_ID_KEY) ?? -1;
                                 emailValidationRequestModel.id = id;
-                                APIService.resendEmailValidation(emailValidationRequestModel)
+                                APIService.resendEmailValidation(
+                                    emailValidationRequestModel)
                                     .then((value) {
                                   if (value != null) {
                                     setState(() {
                                       isApiCallProcess = false;
                                     });
 
-                                    if (value.msg != null  &&  value.msg.isNotEmpty) {
-
+                                    if (value.msg != null &&
+                                        value.msg.isNotEmpty) {
+                                      _arcProgressDialog.dismiss();
                                       final snackBar = SnackBar(
                                           content: Text(value.msg));
                                       scaffoldKey.currentState
                                           .showSnackBar(snackBar);
                                     } else {
+                                      _arcProgressDialog.dismiss();
                                       final snackBar = SnackBar(
                                           content: Text(value.error));
                                       scaffoldKey.currentState
@@ -216,6 +240,7 @@ class _MySecondPageState extends State<MySecondPage> {
                                     }
                                   }
                                 }).onError((error, stackTrace) {
+                                  _arcProgressDialog.dismiss();
                                   setState(() {
                                     isApiCallProcess = false;
                                   });
@@ -238,7 +263,8 @@ class _MySecondPageState extends State<MySecondPage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+                        padding: EdgeInsets.only(
+                            left: 30, right: 30, bottom: 30),
                         child: Text(
                           "Volver al inicio.",
                           textAlign: TextAlign.left,

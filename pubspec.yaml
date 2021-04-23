@@ -27,6 +27,8 @@ dependencies:
   dots_indicator: ^1.2.0
   http: ^0.12.0+2
   shared_preferences: ^2.0.5
+  ars_progress_dialog: 0.0.1
+
 
 
 

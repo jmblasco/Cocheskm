@@ -1,7 +1,12 @@
-import 'package:cocheskm/pages/thirdPage.dart';
+import 'dart:convert';
+import 'package:ars_progress_dialog/dialog.dart';
+import 'package:cocheskm/api/api_service.dart';
+import 'package:cocheskm/model/province_response.dart';
+import 'package:cocheskm/utils/ProgressDialogUtil.dart';
+import 'package:cocheskm/utils/colors.dart';
+import 'package:cocheskm/widgets/Decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:dots_indicator/dots_indicator.dart';
-
 import 'fifthPage.dart';
 
 class FourthPage extends StatelessWidget {
@@ -19,13 +24,31 @@ class MyFourthPage extends StatefulWidget {
 }
 
 class _MyFourthPageState extends State<MyFourthPage> {
-  var items = ['Selecciona'];
+  var isApiCallProcess;
+  ProvincesResponseModel selectedProvince;
+  ArsProgressDialog _progressDialogUtil;
+  List<ProvincesResponseModel> provinceResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    isApiCallProcess = false;
+    _progressDialogUtil = ProgressDialogUtil.arcProgressDialog(context);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getAllProvinces();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController _controller = new TextEditingController();
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -50,11 +73,12 @@ class _MyFourthPageState extends State<MyFourthPage> {
                       "Información personal",
                       style: TextStyle(
                         color: Color(0xFF1AB394),
-                        fontWeight: FontWeight.w900,
-                        fontSize: 30.0,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 22.0,
                       ),
                     ),
-                    Column(
+                    Form(
+                        child: Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(
@@ -65,31 +89,47 @@ class _MyFourthPageState extends State<MyFourthPage> {
                               Padding(
                                 padding: const EdgeInsets.only(
                                   // left: 8.0,
+                                  top: 20.0,
                                   bottom: 8.0,
                                 ),
                                 child: Text(
                                   "Nombre completo",
                                   style: TextStyle(
                                     color: Color(0xFF1AB394),
-                                    fontSize: 14.0,
+                                    fontSize: 12.0,
                                   ),
                                 ),
                               ),
-                              TextField(
+                              TextFormField(
+                                controller: _controller,
                                 cursorHeight: 30.0,
-                                // style: TextStyle(height: 0.8),
+                                style: TextStyle(height: 0.8),
                                 decoration: InputDecoration(
+                                  // suffixIcon: PopupMenuButton<String>(
+                                  //   icon: const Icon(Icons.expand_more),
+                                  //   onSelected: (String value) {
+                                  //     _controller.text = value;
+                                  //   },
+                                  //   itemBuilder: (BuildContext context) {
+                                  //     return items.map<PopupMenuItem<String>>(
+                                  //             (String value) {
+                                  //           return new PopupMenuItem(
+                                  //               child: new Text(value),
+                                  //               value: value);
+                                  //         }).toList();
+                                  //   },
+                                  // ),
                                   contentPadding:
                                       EdgeInsets.fromLTRB(10.0, -1, 10.0, 0),
                                   border: InputBorder.none,
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(color: Colors.black),
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(color: PrimaryColor),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
+                                        BorderRadius.all(Radius.circular(8.0)),
                                     borderSide: BorderSide(
                                       color: Color(0xFF1AB394),
                                     ),
@@ -118,26 +158,9 @@ class _MyFourthPageState extends State<MyFourthPage> {
                                   ),
                                 ),
                               ),
-                              TextField(
-                                cursorHeight: 30.0,
+                              TextFormField(
                                 // style: TextStyle(height: 0.8),
-                                decoration: InputDecoration(
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, -1, 10.0, 0),
-                                  border: InputBorder.none,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF1AB394),
-                                    ),
-                                  ),
-                                ),
+                                decoration: inputDecoration(),
                               )
                             ],
                           ),
@@ -161,42 +184,47 @@ class _MyFourthPageState extends State<MyFourthPage> {
                                   ),
                                 ),
                               ),
-                              TextField(
-                                controller: _controller,
-                                cursorHeight: 30.0,
-                                // style: TextStyle(height: 0.8),
-                                decoration: InputDecoration(
-                                  suffixIcon: PopupMenuButton<String>(
-                                    icon: const Icon(Icons.expand_more),
-                                    onSelected: (String value) {
-                                      _controller.text = value;
-                                    },
-                                    itemBuilder: (BuildContext context) {
-                                      return items.map<PopupMenuItem<String>>(
-                                          (String value) {
-                                        return new PopupMenuItem(
-                                            child: new Text(value),
-                                            value: value);
-                                      }).toList();
-                                    },
+                              Container(
+                                child: Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                        color: PrimaryColor,
+                                        style: BorderStyle.solid,
+                                        width: 0.80),
                                   ),
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, -1, 10.0, 0),
-                                  border: InputBorder.none,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF1AB394),
-                                    ),
+
+                                  child: DropdownButton<ProvincesResponseModel>(
+                                    isExpanded: true,
+                                    hint: Text("Select item"),
+                                    underline: SizedBox(),
+                                    value: selectedProvince,
+                                    onChanged: (ProvincesResponseModel value) {
+                                      setState(() {
+                                        selectedProvince = value;
+                                      });
+                                    },
+                                    items: provinceResponse?.map(
+                                        (ProvincesResponseModel province) {
+                                      return DropdownMenuItem<
+                                          ProvincesResponseModel>(
+                                        value: province,
+                                        child: Row(
+                                          children: <Widget>[
+                                            Text(
+                                              province.texto,
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    })?.toList(),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -219,36 +247,36 @@ class _MyFourthPageState extends State<MyFourthPage> {
                                   ),
                                 ),
                               ),
-                              TextField(
+                              TextFormField(
                                 controller: _controller,
                                 cursorHeight: 30.0,
                                 // style: TextStyle(height: 0.8),
                                 decoration: InputDecoration(
-                                  suffixIcon: PopupMenuButton<String>(
-                                    icon: const Icon(Icons.expand_more),
-                                    onSelected: (String value) {
-                                      _controller.text = value;
-                                    },
-                                    itemBuilder: (BuildContext context) {
-                                      return items.map<PopupMenuItem<String>>(
-                                          (String value) {
-                                        return new PopupMenuItem(
-                                            child: new Text(value),
-                                            value: value);
-                                      }).toList();
-                                    },
-                                  ),
+                                  // suffixIcon: PopupMenuButton<String>(
+                                  //   icon: const Icon(Icons.expand_more),
+                                  //   onSelected: (String value) {
+                                  //     _controller.text = value;
+                                  //   },
+                                  //   itemBuilder: (BuildContext context) {
+                                  //     return items.map<PopupMenuItem<String>>(
+                                  //         (String value) {
+                                  //       return new PopupMenuItem(
+                                  //           child: new Text(value),
+                                  //           value: value);
+                                  //     }).toList();
+                                  //   },
+                                  // ),
                                   contentPadding:
                                       EdgeInsets.fromLTRB(10.0, -1, 10.0, 0),
                                   border: InputBorder.none,
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
-                                    borderSide: BorderSide(color: Colors.black),
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(color: PrimaryColor),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(15.0)),
+                                        BorderRadius.all(Radius.circular(8.0)),
                                     borderSide: BorderSide(
                                       color: Color(0xFF1AB394),
                                     ),
@@ -293,15 +321,16 @@ class _MyFourthPageState extends State<MyFourthPage> {
                           dotsCount: 4,
                           position: 0,
                           decorator: DotsDecorator(
-                            size: const Size.square(15.0),
-                            activeSize: const Size(15.0, 15.0),
-                            spacing: const EdgeInsets.all(15.0),
-                            color: Color(0xFFEEEAEA), // Inactive color
+                            size: const Size.square(8.0),
+                            activeSize: const Size(8.0, 8.0),
+                            spacing: const EdgeInsets.all(8.0),
+                            color: Color(0xFFEEEAEA),
+                            // Inactive color
                             activeColor: Color(0xFF1AB394),
                           ),
                         )
                       ],
-                    )
+                    )),
                   ],
                 ),
               ),
@@ -310,5 +339,37 @@ class _MyFourthPageState extends State<MyFourthPage> {
         ),
       ),
     );
+  }
+
+  void getAllProvinces() {
+    setState(() {
+      isApiCallProcess = true;
+      _progressDialogUtil.show();
+    });
+    APIService.getAllProvince().then((value) {
+      if (value != null) {
+        List<ProvincesResponseModel> provinceResponse =
+            (json.decode(value) as List)
+                .map((data) => ProvincesResponseModel.fromJson(data))
+                .toList();
+        setState(() {
+          isApiCallProcess = false;
+          _progressDialogUtil.dismiss();
+          this.provinceResponse = provinceResponse;
+        });
+
+        print(provinceResponse);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Something went wrong")));
+      }
+    }).onError((error, stackTrace) {
+      setState(() {
+        isApiCallProcess = false;
+        _progressDialogUtil.dismiss();
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error)));
+    });
   }
 }
