@@ -6,13 +6,13 @@ import 'dart:convert';
 import '../model/login_model.dart';
 
 class APIService {
-
   static String BASE_API_URL = "http://dev1.cocheskm.com.es:3099/api/v1";
   static String LOGIN_END_POINT = "/identificacion";
   static String REGISTRATION_END_POINT = "/particulares";
   static String NEW_CODIGO_END_POINT = "/new_codigo_verify_email";
   static String VERIFY_EMAIL_END_POINT = "/verify_email";
   static String PROVINCE_END_POINT = "/datos/provincias";
+  static String PROVINCE_CITIES_END_POINT = "/poblaciones";
   static Map<String, String> headerMap = {"Api-Key": "DEV-apikey"};
 
   static Future<LoginResponseModel> login(
@@ -37,10 +37,11 @@ class APIService {
 
   static Future<EmailValidationResponseModel> verifyEmail(
       EmailValidationRequestModel requestModel) async {
-
-    String url = BASE_API_URL + REGISTRATION_END_POINT+"/${requestModel.id}"+VERIFY_EMAIL_END_POINT;
-    final response = await http.post(Uri.encodeFull(url),
-        headers: headerMap);
+    String url = BASE_API_URL +
+        REGISTRATION_END_POINT +
+        "/${requestModel.id}" +
+        VERIFY_EMAIL_END_POINT;
+    final response = await http.post(Uri.encodeFull(url), headers: headerMap);
     return EmailValidationResponseModel.fromJson(
       json.decode(response.body),
     );
@@ -52,17 +53,23 @@ class APIService {
         REGISTRATION_END_POINT +
         "/${requestModel.id}" +
         NEW_CODIGO_END_POINT;
-    final response =
-        await http.get(Uri.encodeFull(url), headers: headerMap);
+    final response = await http.get(Uri.encodeFull(url), headers: headerMap);
 
     return EmailValidationResponseModel.fromJson(json.decode(response.body));
   }
 
   static Future getAllProvince() async {
-    String url = BASE_API_URL +
-        PROVINCE_END_POINT;
-    final response =
-    await http.get(Uri.encodeFull(url), headers: headerMap);
+    String url = BASE_API_URL + PROVINCE_END_POINT;
+    final response = await http.get(Uri.encodeFull(url), headers: headerMap);
+
+    return response.body;
+  }
+
+  static Future getCitiesOfProvince(int id) async {
+    String url =
+        BASE_API_URL + PROVINCE_END_POINT + "/$id" + PROVINCE_CITIES_END_POINT;
+
+    final response = await http.get(Uri.encodeFull(url), headers: headerMap);
 
     return response.body;
   }

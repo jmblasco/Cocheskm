@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:ars_progress_dialog/dialog.dart';
 import 'package:cocheskm/api/api_service.dart';
+import 'package:cocheskm/model/cities_model.dart';
 import 'package:cocheskm/model/province_response.dart';
 import 'package:cocheskm/utils/ProgressDialogUtil.dart';
 import 'package:cocheskm/utils/colors.dart';
@@ -25,9 +26,11 @@ class MyFourthPage extends StatefulWidget {
 
 class _MyFourthPageState extends State<MyFourthPage> {
   var isApiCallProcess;
-  ProvincesResponseModel selectedProvince;
+  ProvincesResponseModel _selectedProvince;
+  CitiesResponseModel _citiesResponseModel;
   ArsProgressDialog _progressDialogUtil;
-  List<ProvincesResponseModel> provinceResponse;
+  List<ProvincesResponseModel> _provinceResponse;
+  List<CitiesResponseModel> _citiesResponseList;
 
   @override
   void initState() {
@@ -198,15 +201,17 @@ class _MyFourthPageState extends State<MyFourthPage> {
 
                                   child: DropdownButton<ProvincesResponseModel>(
                                     isExpanded: true,
-                                    hint: Text("Select item"),
+                                    hint: Text("Select Provincia"),
                                     underline: SizedBox(),
-                                    value: selectedProvince,
+                                    value: _selectedProvince,
                                     onChanged: (ProvincesResponseModel value) {
                                       setState(() {
-                                        selectedProvince = value;
+                                        _selectedProvince = value;
                                       });
+
+                                      getAllCities(value.id);
                                     },
-                                    items: provinceResponse?.map(
+                                    items: _provinceResponse?.map(
                                         (ProvincesResponseModel province) {
                                       return DropdownMenuItem<
                                           ProvincesResponseModel>(
@@ -247,42 +252,49 @@ class _MyFourthPageState extends State<MyFourthPage> {
                                   ),
                                 ),
                               ),
-                              TextFormField(
-                                controller: _controller,
-                                cursorHeight: 30.0,
-                                // style: TextStyle(height: 0.8),
-                                decoration: InputDecoration(
-                                  // suffixIcon: PopupMenuButton<String>(
-                                  //   icon: const Icon(Icons.expand_more),
-                                  //   onSelected: (String value) {
-                                  //     _controller.text = value;
-                                  //   },
-                                  //   itemBuilder: (BuildContext context) {
-                                  //     return items.map<PopupMenuItem<String>>(
-                                  //         (String value) {
-                                  //       return new PopupMenuItem(
-                                  //           child: new Text(value),
-                                  //           value: value);
-                                  //     }).toList();
-                                  //   },
-                                  // ),
-                                  contentPadding:
-                                      EdgeInsets.fromLTRB(10.0, -1, 10.0, 0),
-                                  border: InputBorder.none,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8.0)),
-                                    borderSide: BorderSide(color: PrimaryColor),
+                              Container(
+                                child: Container(
+                                  padding:
+                                  EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    border: Border.all(
+                                        color: PrimaryColor,
+                                        style: BorderStyle.solid,
+                                        width: 0.80),
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8.0)),
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF1AB394),
-                                    ),
+
+                                  child: DropdownButton<CitiesResponseModel>(
+                                    isExpanded: true,
+                                    hint: Text("Select Población"),
+                                    underline: SizedBox(),
+                                    value: _citiesResponseModel,
+                                    onChanged: (CitiesResponseModel value) {
+                                      setState(() {
+                                        _citiesResponseModel = value;
+                                      });
+
+                                    },
+                                    items: _citiesResponseList?.map(
+                                            (CitiesResponseModel city) {
+                                          return DropdownMenuItem<
+                                              CitiesResponseModel>(
+                                            value: city,
+                                            child: Row(
+                                              children: <Widget>[
+                                                Text(
+                                                  city.texto,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        })?.toList(),
                                   ),
                                 ),
-                              )
+                              ),
+
                             ],
                           ),
                         ),
@@ -355,7 +367,7 @@ class _MyFourthPageState extends State<MyFourthPage> {
         setState(() {
           isApiCallProcess = false;
           _progressDialogUtil.dismiss();
-          this.provinceResponse = provinceResponse;
+          this._provinceResponse = provinceResponse;
         });
 
         print(provinceResponse);
@@ -372,4 +384,37 @@ class _MyFourthPageState extends State<MyFourthPage> {
           .showSnackBar(SnackBar(content: Text(error)));
     });
   }
+
+  void getAllCities(int id) {
+    setState(() {
+      isApiCallProcess = true;
+      _progressDialogUtil.show();
+    });
+    APIService.getCitiesOfProvince(id).then((value) {
+      if (value != null) {
+        List<CitiesResponseModel> citiesResponse =
+        (json.decode(value) as List)
+            .map((data) => CitiesResponseModel.fromJson(data))
+            .toList();
+        setState(() {
+          isApiCallProcess = false;
+          _progressDialogUtil.dismiss();
+          this._citiesResponseList = citiesResponse;
+        });
+
+        print(citiesResponse);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Something went wrong")));
+      }
+    }).onError((error, stackTrace) {
+      setState(() {
+        isApiCallProcess = false;
+        _progressDialogUtil.dismiss();
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error)));
+    });
+  }
+
 }
