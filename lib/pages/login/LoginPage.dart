@@ -4,7 +4,7 @@ import 'package:cocheskm/model/login_model.dart';
 import 'package:cocheskm/pages/register/RegistrationPage.dart';
 import 'package:cocheskm/utils/Constants.dart';
 import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
-import 'package:cocheskm/utils/colors.dart';
+import 'package:cocheskm/utils/ColorsConstants.dart';
 import 'package:cocheskm/widgets/Decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

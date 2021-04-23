@@ -1,5 +1,4 @@
-import 'file:///F:/StudioProjects/cocheskm/lib/pages/register/EmailValidationPage.dart';
-import 'file:///F:/StudioProjects/cocheskm/lib/pages/vehicalRegistraion/thirdRegisterPage.dart';
+import 'package:cocheskm/pages/register/EmailValidationPage.dart';
 import 'package:cocheskm/utils/Constants.dart';
 import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import 'package:cocheskm/ProgressHUD.dart';
 import 'package:cocheskm/api/api_service.dart';
 import 'package:cocheskm/model/registration_model.dart';
 import 'file:///F:/StudioProjects/cocheskm/lib/pages/login/LoginPage.dart';
-import 'package:cocheskm/utils/colors.dart';
+import 'package:cocheskm/utils/ColorsConstants.dart';
 import 'package:cocheskm/widgets/Decoration.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -19,8 +18,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var checkedValue = true;
   bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  RegistrationRequestModel registrationRequestModel;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  RegistrationRequestModel registrationRequestModel;
 
   @override
   void initState() {

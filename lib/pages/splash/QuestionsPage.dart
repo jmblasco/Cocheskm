@@ -1,5 +1,5 @@
 import 'file:///F:/StudioProjects/cocheskm/lib/pages/login/LoginPage.dart';
-import 'package:cocheskm/utils/colors.dart';
+import 'package:cocheskm/utils/ColorsConstants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

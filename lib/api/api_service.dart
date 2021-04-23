@@ -1,3 +1,4 @@
+import 'package:cocheskm/model/MarcasResponseModel.dart';
 import 'package:cocheskm/model/email_validation_model.dart';
 import 'package:cocheskm/model/province_response.dart';
 import 'package:cocheskm/model/registration_model.dart';
@@ -12,6 +13,7 @@ class APIService {
   static String NEW_CODIGO_END_POINT = "/new_codigo_verify_email";
   static String VERIFY_EMAIL_END_POINT = "/verify_email";
   static String PROVINCE_END_POINT = "/datos/provincias";
+  static String MARCAS_END_POINT = "/datos/marcas";
   static String PROVINCE_CITIES_END_POINT = "/poblaciones";
   static Map<String, String> headerMap = {"Api-Key": "DEV-apikey"};
 
@@ -72,5 +74,12 @@ class APIService {
     final response = await http.get(Uri.encodeFull(url), headers: headerMap);
 
     return response.body;
+  }
+
+  static Future<MarcasResponseModel> getAllMarcas() async {
+    String url = BASE_API_URL + MARCAS_END_POINT;
+    final response = await http.get(Uri.encodeFull(url), headers: headerMap);
+
+    return MarcasResponseModel.fromJson(json.decode(response.body));
   }
 }

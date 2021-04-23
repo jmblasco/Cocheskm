@@ -1,7 +1,7 @@
 import 'package:ars_progress_dialog/dialog.dart';
 import 'package:cocheskm/api/api_service.dart';
 import 'package:cocheskm/model/email_validation_model.dart';
-import 'package:cocheskm/pages/vehicalRegistraion/thirdRegisterPage.dart';
+import 'package:cocheskm/pages/register/vehicalRegistraion/RegisteroCosioOne.dart';
 import 'package:cocheskm/utils/Constants.dart';
 import 'package:cocheskm/utils/ProgressDialogUtil.dart';
 import 'package:cocheskm/utils/SharedPrerferenceUtils.dart';
@@ -65,7 +65,7 @@ class _MySecondPageState extends State<MySecondPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ThirdPage()),
+                            builder: (context) => RegistroCosioOne()),
                       );
                     },
                     child: Text(
@@ -155,7 +155,7 @@ class _MySecondPageState extends State<MySecondPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  ThirdPage()),
+                                                  RegistroCosioOne()),
                                         );
                                       } else {
                                         _arcProgressDialog.dismiss();

@@ -1,8 +1,8 @@
-import 'package:cocheskm/pages/vehicalRegistraion/fourthPage.dart';
-import 'package:cocheskm/utils/colors.dart';
+import 'package:cocheskm/pages/register/vehicalRegistraion/RegistroCosioTwo.dart';
+import 'package:cocheskm/utils/ColorsConstants.dart';
 import 'package:flutter/material.dart';
 
-class ThirdPage extends StatelessWidget {
+class RegistroCosioOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,7 +81,7 @@ class _MyThirdPageState extends State<MyThirdPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => FourthPage()),
+                                        builder: (context) => RegisteroCosioTwo()),
                                   );
                                 },
                                 child: Center(
@@ -96,6 +96,7 @@ class _MyThirdPageState extends State<MyThirdPage> {
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
+                                      const Padding(padding: EdgeInsets.only(left: 8.0)),
                                       Icon(Icons.arrow_forward_outlined,color: PrimaryColor,)
                                     ],
                                   ),
