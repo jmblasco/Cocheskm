@@ -35,6 +35,10 @@ class _MyFifthPageState extends State<MyFifthPage> {
   List<Entries> _marcasEntriesList;
   Entries _selectedMarcas;
 
+  var _valueSiniestro;
+
+  bool _valueIndustrial;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -43,6 +47,8 @@ class _MyFifthPageState extends State<MyFifthPage> {
     isApiCallProcess = false;
     _marcasEntriesList = null;
     _selectedMarcas = null;
+    _valueSiniestro = false;
+    _valueIndustrial = false;
   }
 
   @override
@@ -55,13 +61,12 @@ class _MyFifthPageState extends State<MyFifthPage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _controller = new TextEditingController();
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
           child: Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             height: 240,
@@ -119,10 +124,10 @@ class _MyFifthPageState extends State<MyFifthPage> {
                               DropdownButtonFormField<Entries>(
                                 isExpanded: true,
                                 decoration: inputDecorationDropDown(),
-                                hint: Text("Selecciona Marcas",
-                                  style: TextStyle(
-                                    fontSize: 12.0
-                                ),),
+                                hint: Text(
+                                  "Selecciona Marcas",
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
                                 value: _selectedMarcas,
                                 onChanged: (Entries value) {
                                   setState(() {
@@ -137,8 +142,9 @@ class _MyFifthPageState extends State<MyFifthPage> {
                                       children: <Widget>[
                                         Text(
                                           marcas.texto,
-                                          style: TextStyle(color: Colors.black,
-                                          fontSize: 12.0),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12.0),
                                         ),
                                       ],
                                     ),
@@ -161,7 +167,7 @@ class _MyFifthPageState extends State<MyFifthPage> {
                             Expanded(
                                 child: Container(
                               child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "Modelo",
@@ -176,10 +182,10 @@ class _MyFifthPageState extends State<MyFifthPage> {
                                   DropdownButtonFormField<Entries>(
                                     isExpanded: true,
                                     decoration: inputDecorationDropDown(),
-                                    hint: Text("Selecciona Marcas",
-                                    style: TextStyle(
-                                      fontSize: 12.0
-                                    ),),
+                                    hint: Text(
+                                      "Selecciona Marcas",
+                                      style: TextStyle(fontSize: 12.0),
+                                    ),
                                     value: _selectedMarcas,
                                     onChanged: (Entries value) {
                                       setState(() {
@@ -211,7 +217,7 @@ class _MyFifthPageState extends State<MyFifthPage> {
                                 ],
                               ),
                             )),
-                            const Padding(padding: EdgeInsets.only(left:16.0)),
+                            const Padding(padding: EdgeInsets.only(left: 16.0)),
                             Expanded(
                                 child: Container(
                               child: Column(
@@ -262,10 +268,10 @@ class _MyFifthPageState extends State<MyFifthPage> {
                               DropdownButtonFormField<Entries>(
                                 isExpanded: true,
                                 decoration: inputDecorationDropDown(),
-                                hint: Text("Selecciona Marcas",
-                                  style: TextStyle(
-                                      fontSize: 12.0
-                                  ),),
+                                hint: Text(
+                                  "Selecciona Marcas",
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
                                 value: _selectedMarcas,
                                 onChanged: (Entries value) {
                                   setState(() {
@@ -273,14 +279,15 @@ class _MyFifthPageState extends State<MyFifthPage> {
                                   });
                                 },
                                 items:
-                                _marcasEntriesList?.map((Entries marcas) {
+                                    _marcasEntriesList?.map((Entries marcas) {
                                   return DropdownMenuItem<Entries>(
                                     value: marcas,
                                     child: Row(
                                       children: <Widget>[
                                         Text(
                                           marcas.texto,
-                                          style: TextStyle(color: Colors.black,
+                                          style: TextStyle(
+                                              color: Colors.black,
                                               fontSize: 12.0),
                                         ),
                                       ],
@@ -295,6 +302,57 @@ class _MyFifthPageState extends State<MyFifthPage> {
                               ),
                             ],
                           ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                  top: 16.0, left: 40, right: 40),
+                              child: Text(
+                                "El coche es ",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    fontSize: 12.0, color: PrimaryColor),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Padding(
+                                    padding: EdgeInsets.only(left: 8, right: 8)),
+                                Expanded(
+                                    child: CheckboxListTile(
+                                  value: _valueSiniestro,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _valueSiniestro = newValue;
+                                    });
+                                  },
+                                  activeColor: PrimaryColor,
+                                  title: Text("Siniestro"),
+                                  controlAffinity: ListTileControlAffinity
+                                      .leading, //  <-- leading Checkbox
+                                )),
+                                const Padding(
+                                    padding: EdgeInsets.only(left: 8, right: 8)),
+                                Expanded(
+                                    child: CheckboxListTile(
+                                  title: Text("Industrial"),
+                                  value: _valueIndustrial,
+                                  activeColor: PrimaryColor,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _valueIndustrial = newValue;
+                                    });
+                                  },
+
+                                  controlAffinity: ListTileControlAffinity
+                                      .leading, //  <-- leading Checkbox
+                                )),
+                              ],
+                            ),
+                          ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
@@ -316,23 +374,25 @@ class _MyFifthPageState extends State<MyFifthPage> {
                                             RegistroCosioOne()),
                                   );
                                 },
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Siguiente",
-                                    style: TextStyle(
-                                      color: Color(0xFF1AB394),
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Siguiente",
+                                        style: TextStyle(
+                                          color: Color(0xFF1AB394),
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const Padding(
+                                          padding: EdgeInsets.only(left: 8.0)),
+                                      Icon(Icons.arrow_forward_outlined,
+                                          color: PrimaryColor)
+                                    ],
                                   ),
-                                  const Padding(padding: EdgeInsets.only(left: 8.0)),
-                                  Icon(Icons.arrow_forward_outlined,color: PrimaryColor)
-                                ],
-                              ),
-                            ),
+                                ),
                               ),
                             ],
                           ),
