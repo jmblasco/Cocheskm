@@ -24,7 +24,7 @@ class VerifyEmailCodeRequestModel {
   VerifyEmailCodeRequestModel({this.code});
   Map<String, String> toJson() {
     Map<String, String> map = {
-      'id': code
+      'code': code
     };
     return map;
   }
