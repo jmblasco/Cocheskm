@@ -2,6 +2,7 @@ import 'package:cocheskm/model/MarcasResponseModel.dart';
 import 'package:cocheskm/model/email_validation_model.dart';
 import 'package:cocheskm/model/province_response.dart';
 import 'package:cocheskm/model/registration_model.dart';
+import 'package:cocheskm/model/verify_email_code.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../model/login_model.dart';
@@ -37,14 +38,14 @@ class APIService {
     );
   }
 
-  static Future<EmailValidationResponseModel> verifyEmail(
-      EmailValidationRequestModel requestModel) async {
+  static Future<VerifyEmailCodeResponseModel> verifyEmail(
+      VerifyEmailCodeRequestModel requestModel) async {
     String url = BASE_API_URL +
         REGISTRATION_END_POINT +
-        "/${requestModel.id}" +
+        "/${requestModel.code}" +
         VERIFY_EMAIL_END_POINT;
     final response = await http.post(Uri.encodeFull(url), headers: headerMap);
-    return EmailValidationResponseModel.fromJson(
+    return VerifyEmailCodeResponseModel.fromJson(
       json.decode(response.body),
     );
   }

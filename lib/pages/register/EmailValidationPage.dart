@@ -1,6 +1,7 @@
 import 'package:ars_progress_dialog/dialog.dart';
 import 'package:cocheskm/api/api_service.dart';
 import 'package:cocheskm/model/email_validation_model.dart';
+import 'package:cocheskm/model/verify_email_code.dart';
 import 'package:cocheskm/pages/register/vehicalRegistraion/RegisteroCosioOne.dart';
 import 'package:cocheskm/utils/Constants.dart';
 import 'package:cocheskm/utils/ProgressDialogUtil.dart';
@@ -28,6 +29,7 @@ class _MySecondPageState extends State<MySecondPage> {
   bool isApiCallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   EmailValidationRequestModel emailValidationRequestModel;
+  VerifyEmailCodeRequestModel _verifyEmailCodeRequestModel;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   ArsProgressDialog _arcProgressDialog;
 
@@ -37,6 +39,7 @@ class _MySecondPageState extends State<MySecondPage> {
     super.initState();
     _arcProgressDialog = ProgressDialogUtil.arcProgressDialog(context);
     emailValidationRequestModel = EmailValidationRequestModel();
+    _verifyEmailCodeRequestModel = VerifyEmailCodeRequestModel();
   }
 
 
@@ -111,11 +114,13 @@ class _MySecondPageState extends State<MySecondPage> {
                                 key: globalFormKey,
                                 child: TextFormField(
                                   keyboardType: TextInputType.text,
-                                  onSaved: (input) => input,
+                                  onSaved: (input) => {input,
+                                  _verifyEmailCodeRequestModel.code = input},
                                   validator: (input) =>
-                                  input.isEmpty
-                                      ? "Please enter validation code"
-                                      : null,
+                                    input.isEmpty
+                                        ? "Please enter validation code"
+                                        : null,
+
                                   // style: TextStyle(height: 0.8),
                                   decoration: inputDecoration(),
                                 )),
@@ -141,7 +146,7 @@ class _MySecondPageState extends State<MySecondPage> {
                                       .getIntValuesSF(USER_ID_KEY) ?? -1;
                                   emailValidationRequestModel.id = id;
                                   APIService.verifyEmail(
-                                      emailValidationRequestModel)
+                                      _verifyEmailCodeRequestModel)
                                       .then((value) {
                                     if (value != null) {
                                       setState(() {
